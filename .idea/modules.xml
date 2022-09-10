@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/fake-bilibili-api/fake-bilibili-api.iml" filepath="$PROJECT_DIR$/fake-bilibili-api/fake-bilibili-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fake-bilibili-dao/fake-bilibili-dao.iml" filepath="$PROJECT_DIR$/fake-bilibili-dao/fake-bilibili-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fake-bilibili-service/fake-bilibili-service.iml" filepath="$PROJECT_DIR$/fake-bilibili-service/fake-bilibili-service.iml" />
+    </modules>
+  </component>
+</project>
