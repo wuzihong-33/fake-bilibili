@@ -2,6 +2,7 @@ package com.bilibili.service.handler;
 
 import com.bilibili.domain.JsonResponse;
 import com.bilibili.exception.ConditionException;
+import com.bilibili.service.UserService;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,0 +1,4 @@
+com\bilibili\api\DemoApi.class
+com\bilibili\api\UserApi.class
+com\bilibili\support\UserSupport.class
+com\bilibili\FakeBilibiliApp.class

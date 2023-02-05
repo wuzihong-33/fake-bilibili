@@ -1,0 +1,11 @@
+com\bilibili\constant\UserConstant.class
+com\bilibili\domain\UserFollowing.class
+com\bilibili\exception\ConditionException.class
+com\bilibili\dao\DemoDao.class
+com\bilibili\domain\JsonResponse.class
+com\bilibili\dao\UserFollowingDao.class
+com\bilibili\domain\UserInfo.class
+com\bilibili\dao\UserDao.class
+com\bilibili\domain\User.class
+com\bilibili\dao\FollowingGroupDao.class
+com\bilibili\domain\FollowingGroup.class
