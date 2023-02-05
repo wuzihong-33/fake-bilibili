@@ -11,11 +11,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
- * RSA加密
- * 非对称加密，有公钥和私钥之分，公钥用于数据加密，私钥用于数据解密。加密结果可逆
- * 公钥一般提供给外部进行使用，私钥需要放置在服务器端保证安全性。
- * 特点：加密安全性很高，但是加密速度较慢
- *
+ * RSA非对称加密工具类
+ * 公钥负责加密，私钥解密
+ * 公钥可以流传，私钥放在服务器端
  */
 public class RSAUtil {
 
@@ -26,6 +24,12 @@ public class RSAUtil {
 	public static void main(String[] args) throws Exception{
 		String str = RSAUtil.encrypt("123456");
 		System.out.println(str);
+		try {
+			String rawString = RSAUtil.decrypt(str);
+			System.out.println("rawString: " + rawString);
+		} catch (Exception e) {
+			System.out.println("解密失败");
+		}
 	}
 
 	public static String getPublicKeyStr(){
@@ -55,6 +59,12 @@ public class RSAUtil {
 		return new RSAKey(privateKey, privateKeyString, publicKey, publicKeyString);
 	}
 
+	/**
+	 * 使用公钥对source进行加密
+	 * @param source
+	 * @return
+	 * @throws Exception
+	 */
 	public static String encrypt(String source) throws Exception {
 		byte[] decoded = Base64.decodeBase64(PUBLIC_KEY);
 		RSAPublicKey rsaPublicKey = (RSAPublicKey) KeyFactory.getInstance("RSA")
@@ -64,6 +74,12 @@ public class RSAUtil {
 		return Base64.encodeBase64String(cipher.doFinal(source.getBytes(StandardCharsets.UTF_8)));
 	}
 
+	public static String decrypt(String text) throws Exception {
+		Cipher cipher = getCipher();
+		byte[] inputByte = Base64.decodeBase64(text.getBytes(StandardCharsets.UTF_8));
+		return new String(cipher.doFinal(inputByte));
+	}
+
 	public static Cipher getCipher() throws Exception {
 		byte[] decoded = Base64.decodeBase64(PRIVATE_KEY);
 		RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) KeyFactory.getInstance("RSA")
@@ -71,12 +87,6 @@ public class RSAUtil {
 		Cipher cipher = Cipher.getInstance("RSA");
 		cipher.init(2, rsaPrivateKey);
 		return cipher;
-	}
-
-	public static String decrypt(String text) throws Exception {
-		Cipher cipher = getCipher();
-		byte[] inputByte = Base64.decodeBase64(text.getBytes(StandardCharsets.UTF_8));
-		return new String(cipher.doFinal(inputByte));
 	}
 	
 	public static class RSAKey {
@@ -123,5 +133,5 @@ public class RSAUtil {
 		  public void setPublicKeyString(String publicKeyString) {
 		    this.publicKeyString = publicKeyString;
 		  }
-		}
+	}
 }

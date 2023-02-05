@@ -47,7 +47,7 @@ public class UserService {
         user.setPassword(md5Password);
         user.setCreateTime(now);
         userDao.addUser(user);
-        // 添加用户信息表（用户一般只需填写账号、密码，之后便可以生成初始值）
+        // 注册账号，用户只填写账号、密码；其余的将默认使用初始值
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(user.getId());
         userInfo.setNick(UserConstant.DEFAULT_NICK);

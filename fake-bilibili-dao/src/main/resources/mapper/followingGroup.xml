@@ -22,7 +22,7 @@
             id = #{id}
     </select>
 
-    <select id="getFollowingGroupsByUserId" parameterType="java.lang.Long" resultType="com.domain.FollowingGroup">
+    <select id="getFollowingGroupsByUserId" parameterType="java.lang.Long" resultType="com.bilibili.domain.FollowingGroup">
         select
             *
         from

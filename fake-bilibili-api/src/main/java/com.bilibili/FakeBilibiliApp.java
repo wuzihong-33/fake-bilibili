@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 public class FakeBilibiliApp {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(FakeBilibiliApp.class, args);
+        
     }
 
 }

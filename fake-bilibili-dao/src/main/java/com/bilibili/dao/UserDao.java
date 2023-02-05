@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Mapper
 public interface UserDao {
-
     User getUserByPhone(String phone);
 
     // 返回成功插入的数量

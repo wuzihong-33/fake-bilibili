@@ -26,7 +26,7 @@
             )
     </insert>
 
-    <select id="getUserFollowings" parameterType="java.lang.Long" resultType="com.domain.UserFollowing">
+    <select id="getUserFollowings" parameterType="java.lang.Long" resultType="com.bilibili.domain.UserFollowing">
         select
             *
         from

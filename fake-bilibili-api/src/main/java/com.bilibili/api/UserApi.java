@@ -19,35 +19,15 @@ public class UserApi {
     private UserSupport userSupport;
 
     /**
-     * 获取user info
-     * @return
-     */
-    @GetMapping("/users")
-    public JsonResponse<User> getUserInfo(){
-        Long userId = userSupport.getCurrentUserId();
-        User user = userService.getUserInfo(userId);
-        return new JsonResponse<>(user);
-    }
-
-    /**
-     * 获取rsa公钥
-     * @return
-     */
-    @GetMapping("/rsa-pks")
-    public JsonResponse<String> getRsaPublicKey() {
-        String pk = RSAUtil.getPublicKeyStr();
-        return new JsonResponse<String>(pk);
-    }
-
-    /**
      * 用户注册
      * @param user
      * @return
      */
     @PostMapping("/users")
     public JsonResponse<String> addUser(@RequestBody User user){
+        System.out.println("User" + user.toString());
         userService.addUser(user);
-        return JsonResponse.success(); // 由于在 userService.addUser(user); 里边已经对各种情况 抛异常，因此能走到最后一步一般是成功的
+        return JsonResponse.success();
     }
 
     /**
@@ -62,14 +42,37 @@ public class UserApi {
     }
 
     /**
+     * 获取用户信息
+     * @return
+     */
+    @GetMapping("/users")
+    public JsonResponse<User> getUserInfo(){
+        Long userId = userSupport.getCurrentUserId();
+        User user = userService.getUserInfo(userId);
+        return new JsonResponse<User>(user);
+    }
+
+    /**
      * 更新用户信息
      */
     @PutMapping("/user-infos")
     public JsonResponse<String> updateUserInfos(@RequestBody UserInfo userInfo){
-        Long userId = userSupport.getCurrentUserId(); // userId一般都是从token中获取而非前端直接传递。
+        Long userId = userSupport.getCurrentUserId(); //登录状态下，从token中获取
         userInfo.setUserId(userId);
         userService.updateUserInfos(userInfo);
         return JsonResponse.success();
     }
+
+    /**
+     * 获取rsa公钥
+     * @return
+     */
+    @GetMapping("/rsa-pks")
+    public JsonResponse<String> getRsaPublicKey() {
+        String pk = RSAUtil.getPublicKeyStr();
+        return new JsonResponse<String>(pk);
+    }
+    
+    
 
 }

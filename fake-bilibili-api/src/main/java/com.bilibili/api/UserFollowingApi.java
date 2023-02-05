@@ -1,5 +1,6 @@
 package com.bilibili.api;
 
+import com.bilibili.domain.FollowingGroup;
 import com.bilibili.domain.JsonResponse;
 import com.bilibili.domain.UserFollowing;
 import com.bilibili.service.UserFollowingService;
