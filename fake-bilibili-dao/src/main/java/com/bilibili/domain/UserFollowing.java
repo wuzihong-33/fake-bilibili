@@ -2,6 +2,9 @@ package com.bilibili.domain;
 
 import java.util.Date;
 
+/**
+ * 关注与被关注关联信息
+ */
 public class UserFollowing {
     private Long id;
 
@@ -14,7 +17,7 @@ public class UserFollowing {
     private Date createTime;
 
     // 此字段非数据库字段，是通过连接查询，在程序中set的
-    private UserInfo userInfo;
+    private UserInfo userInfo; 
 
     public Long getId() {
         return id;

@@ -16,7 +16,7 @@ public class FollowingGroup {
 
     private Date updateTime;
 
-    private List<UserInfo> followingUserInfoList;
+    private List<UserInfo> followingUserInfoList;// 该分组下所有的用户信息
 
     public Long getId() {
         return id;

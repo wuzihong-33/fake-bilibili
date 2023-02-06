@@ -7,9 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="fake-bilibili-dao" />
+        <module name="fake-bilibili" />
         <module name="fake-bilibili-api" />
         <module name="fake-bilibili-service" />
-        <module name="fake-bilibili" />
       </profile>
     </annotationProcessing>
   </component>

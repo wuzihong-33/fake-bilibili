@@ -15,6 +15,16 @@ public class UserInfo {
 
     private String gender;
 
+    private Boolean followed; // 是否互关
+
+    public Boolean getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(Boolean followed) {
+        this.followed = followed;
+    }
+
     public Long getId() {
         return id;
     }
