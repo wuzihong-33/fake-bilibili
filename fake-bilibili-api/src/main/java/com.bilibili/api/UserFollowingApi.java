@@ -34,7 +34,7 @@ public class UserFollowingApi {
 
 
     /**
-     * 获取关注分组（包括用户信息）
+     * 获取用户所有关注信息
      * @return
      */
     @GetMapping("/user-followings")
@@ -56,7 +56,7 @@ public class UserFollowingApi {
     }
     
     /**
-     * 创建用户自定义关注分组
+     * 创建自定义用户分组
      * @param followingGroup
      * @return
      */
@@ -69,7 +69,7 @@ public class UserFollowingApi {
     }
 
     /**
-     * 获取用户关注分组
+     * 获取关注用户分组
      * @return
      */
     @GetMapping("/user-following-groups")

@@ -10,6 +10,8 @@ import com.bilibili.support.UserSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @RestController
 public class UserApi {
@@ -72,7 +74,32 @@ public class UserApi {
         String pk = RSAUtil.getPublicKeyStr();
         return new JsonResponse<String>(pk);
     }
-    
+
+    /**
+     * 退出登录
+     * @param request
+     * @return
+     */
+    @DeleteMapping("/refresh-tokens")
+    public JsonResponse<String> logout(HttpServletRequest request){
+        String refreshToken = request.getHeader("refreshToken");
+        Long userId = userSupport.getCurrentUserId();
+//        userService.logout(refreshToken, userId);
+        return JsonResponse.success();
+    }
+
+    /**
+     * 刷新token
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/access-tokens")
+    public JsonResponse<String> refreshAccessToken(HttpServletRequest request) throws Exception {
+        String refreshToken = request.getHeader("refreshToken");
+//        String accessToken = userService.refreshAccessToken(refreshToken);
+        return new JsonResponse<>(null);
+    }
     
 
 }
