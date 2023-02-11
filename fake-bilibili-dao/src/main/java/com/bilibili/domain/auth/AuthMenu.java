@@ -2,8 +2,8 @@ package com.bilibili.domain.auth;
 
 import java.util.Date;
 
-public class AuthMenu {
 
+public class AuthMenu {
     private Long id;
 
     private String name;

@@ -3,7 +3,6 @@ package com.bilibili.domain.auth;
 import java.util.Date;
 
 public class AuthRoleElementOperation {
-
     private Long id;
 
     private Long roleId;
