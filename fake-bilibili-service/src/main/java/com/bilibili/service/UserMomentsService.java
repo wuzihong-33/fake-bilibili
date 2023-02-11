@@ -3,14 +3,13 @@ package com.bilibili.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.bilibili.constant.UserMomentsConstant;
+import com.bilibili.constant.MQConstant;
 import com.bilibili.dao.UserMomentsDao;
 import com.bilibili.domain.UserMoment;
 import com.bilibili.service.util.RocketMQUtil;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ public class UserMomentsService {
     public void addUserMoments(UserMoment userMoment) throws Exception {
         userMoment.setCreateTime(new Date());
         userMomentsDao.addUserMoments(userMoment);
-        Message msg = new Message(UserMomentsConstant.TOPIC_MOMENTS, JSONObject.toJSONString(userMoment).getBytes(StandardCharsets.UTF_8));
+        Message msg = new Message(MQConstant.TOPIC_MOMENTS, JSONObject.toJSONString(userMoment).getBytes(StandardCharsets.UTF_8));
         RocketMQUtil.syncSendMsg(momentsProducer, msg);
     }
 

@@ -1,6 +1,6 @@
 package com.bilibili.constant;
 
-public interface UserMomentsConstant {
+public interface MQConstant {
 
     public static final String GROUP_MOMENTS = "MomentsGroup";
 

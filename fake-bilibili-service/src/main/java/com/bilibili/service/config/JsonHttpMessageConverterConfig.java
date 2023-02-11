@@ -31,8 +31,12 @@ public class JsonHttpMessageConverterConfig {
         System.out.println(JSONObject.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect));
     }
 
-    @Bean
-    @Primary
+    /**
+     * 疑惑：做啥用的？
+     * @return
+     */
+//    @Bean
+//    @Primary
     public HttpMessageConverters fastJsonHttpMessageConverters(){
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
