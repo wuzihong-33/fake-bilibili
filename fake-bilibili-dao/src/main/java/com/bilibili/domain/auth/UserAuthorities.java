@@ -3,10 +3,9 @@ package com.bilibili.domain.auth;
 import java.util.List;
 
 public class UserAuthorities {
+    private List<AuthRoleElementOperation> roleElementOperationList;
 
-    List<AuthRoleElementOperation> roleElementOperationList;
-
-    List<AuthRoleMenu> roleMenuList;
+    private List<AuthRoleMenu> roleMenuList;
 
     public List<AuthRoleElementOperation> getRoleElementOperationList() {
         return roleElementOperationList;
