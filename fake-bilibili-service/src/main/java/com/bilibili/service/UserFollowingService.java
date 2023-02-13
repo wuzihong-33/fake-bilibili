@@ -107,6 +107,11 @@ public class UserFollowingService {
         return followingGroup.getId();
     }
 
+    /**
+     * 获取用户所有的关注列表及所对应的用户信息
+     * @param userId
+     * @return
+     */
     public List<FollowingGroup> getUserFollowingGroups(Long userId) {
         return followingGroupService.getUserFollowingGroups(userId);
     }
@@ -118,7 +123,7 @@ public class UserFollowingService {
         List<UserFollowing> fanList = userFollowingDao.getUserFans(followingId); // userId的粉丝列表
         Set<Long> fanIdSet = fanList.stream().map(UserFollowing::getUserId).collect(Collectors.toSet());
         List<UserInfo> fanUserInfoList = new ArrayList<>();
-        if(fanIdSet.size() > 0){
+        if (fanIdSet.size() > 0) {
             fanUserInfoList = userService.getUserInfoByUserIds(fanIdSet);
         }
         List<UserFollowing> followingList = userFollowingDao.getUserFollowings(userId); // userId的关注列表
@@ -131,10 +136,24 @@ public class UserFollowingService {
             }
             for (UserFollowing following : followingList) {
                 if (following.getFollowingId().equals(fan.getUserId())) {
-                    fan.getUserInfo().setFollowed(true);// 互关
+                    fan.getUserInfo().setFollowed(true);
                 }
             }
         }
         return fanList;
     }
+
+    public List<UserInfo> checkFollowingStatus(List<UserInfo> userInfoList, Long userId) {
+        List<UserFollowing> userFollowingList = userFollowingDao.getUserFollowings(userId); // 获取当前用户正在关注的用户列表
+        for(UserInfo userInfo : userInfoList){
+            userInfo.setFollowed(false);
+            for(UserFollowing userFollowing : userFollowingList) {
+                if (userFollowing.getFollowingId().equals(userInfo.getUserId())) {
+                    userInfo.setFollowed(true);
+                }
+            }
+        }
+        return userInfoList;
+    }
+    
 }

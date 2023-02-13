@@ -1,5 +1,6 @@
 package com.bilibili.service;
 
+import com.bilibili.constant.AuthRoleConstant;
 import com.bilibili.domain.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserAuthService {
-
     @Autowired
     private UserRoleService userRoleService;
 
@@ -33,11 +33,11 @@ public class UserAuthService {
         return userAuthorities;
     }
 
-//    public void addUserDefaultRole(Long id) {
-//        UserRole userRole = new UserRole();
-//        AuthRole role = authRoleService.getRoleByCode(AuthRoleConstant.ROLE_LV0);
-//        userRole.setUserId(id);
-//        userRole.setRoleId(role.getId());
-//        userRoleService.addUserRole(userRole);
-//    }
+    public void addUserDefaultRole(Long id) {
+        UserRole userRole = new UserRole();
+        AuthRole role = authRoleService.getRoleByCode(AuthRoleConstant.ROLE_LV0);
+        userRole.setUserId(id);
+        userRole.setRoleId(role.getId());
+        userRoleService.addUserRole(userRole);
+    }
 }

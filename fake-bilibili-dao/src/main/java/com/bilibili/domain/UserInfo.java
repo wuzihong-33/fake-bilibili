@@ -15,7 +15,13 @@ public class UserInfo {
 
     private String gender;
 
-    private Boolean followed; // 是否互关
+    private Boolean followed; // 已关注
+
+    private String birth;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public Boolean getFollowed() {
         return followed;
@@ -96,11 +102,5 @@ public class UserInfo {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-
-    private String birth;
-
-    private Date createTime;
-
-    private Date updateTime;
 
 }

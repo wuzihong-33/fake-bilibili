@@ -93,7 +93,7 @@ public class RSAUtil {
 		  private RSAPrivateKey privateKey;
 		  private String privateKeyString;
 		  private RSAPublicKey publicKey;
-		  public String publicKeyString;
+		  private String publicKeyString;
 
 		  public RSAKey(RSAPrivateKey privateKey, String privateKeyString, RSAPublicKey publicKey, String publicKeyString) {
 		    this.privateKey = privateKey;

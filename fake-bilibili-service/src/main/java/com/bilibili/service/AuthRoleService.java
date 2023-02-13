@@ -1,6 +1,5 @@
 package com.bilibili.service;
 
-
 import com.bilibili.dao.AuthRoleDao;
 import com.bilibili.domain.auth.AuthRole;
 import com.bilibili.domain.auth.AuthRoleElementOperation;

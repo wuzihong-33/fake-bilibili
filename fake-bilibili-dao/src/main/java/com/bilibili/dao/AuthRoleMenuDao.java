@@ -8,6 +8,6 @@ import java.util.Set;
 
 @Mapper
 public interface AuthRoleMenuDao {
-
+    
     List<AuthRoleMenu> getAuthRoleMenusByRoleIds(Set<Long> roleIdSet);
 }

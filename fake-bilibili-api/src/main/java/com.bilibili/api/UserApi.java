@@ -1,8 +1,10 @@
 package com.bilibili.api;
 
-
+import com.alibaba.fastjson.JSONObject;
+import com.bilibili.domain.PageResult;
 import com.bilibili.domain.User;
 import com.bilibili.domain.UserInfo;
+import com.bilibili.service.UserFollowingService;
 import com.bilibili.service.UserService;
 import com.bilibili.service.util.RSAUtil;
 import com.bilibili.domain.JsonResponse;
@@ -11,7 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserApi {
@@ -19,23 +22,20 @@ public class UserApi {
     private UserService userService;
     @Autowired
     private UserSupport userSupport;
+    @Autowired
+    private UserFollowingService userFollowingService;
 
     /**
      * 用户注册
-     * @param user
-     * @return
      */
     @PostMapping("/users")
     public JsonResponse<String> addUser(@RequestBody User user){
-        System.out.println("User" + user.toString());
         userService.addUser(user);
         return JsonResponse.success();
     }
 
     /**
      * 用户登录
-     * @param user
-     * @return
      */
     @PostMapping("/user-tokens")
     public JsonResponse<String> login(@RequestBody User user) throws Exception{
@@ -44,8 +44,7 @@ public class UserApi {
     }
 
     /**
-     * 获取用户信息
-     * @return
+     * 获取当前用户信息
      */
     @GetMapping("/users")
     public JsonResponse<User> getUserInfo(){
@@ -67,7 +66,6 @@ public class UserApi {
 
     /**
      * 获取rsa公钥
-     * @return
      */
     @GetMapping("/rsa-pks")
     public JsonResponse<String> getRsaPublicKey() {
@@ -75,16 +73,57 @@ public class UserApi {
         return new JsonResponse<String>(pk);
     }
 
+
+    @PutMapping("/users")
+    public JsonResponse<String> updateUsers(@RequestBody User user) throws Exception{
+        Long userId = userSupport.getCurrentUserId();
+        user.setId(userId);
+        userService.updateUsers(user);
+        return JsonResponse.success();
+    }
+
+
+    /**
+     * 分页查询用户列表
+     * 查询用户，方便关注和取消关注up
+     * @param no 当前页码
+     * @param size 当前页的大小
+     * @param nick 查询条件 昵称
+     * @return
+     */
+    @GetMapping("/user-infos")
+    public JsonResponse<PageResult<UserInfo>> pageListUserInfos(@RequestParam Integer no, @RequestParam Integer size, String nick) {
+        Long userId = userSupport.getCurrentUserId();
+        JSONObject params = new JSONObject();
+        params.put("no", no);
+        params.put("size", size);
+        params.put("nick", nick);
+        params.put("userId", userId);
+        PageResult<UserInfo> result = userService.pageListUserInfos(params);
+        if(result.getTotal() > 0){
+            List<UserInfo> checkedUserInfoList = userFollowingService.checkFollowingStatus(result.getList(), userId);
+            result.setList(checkedUserInfoList);
+        }
+        return new JsonResponse<>(result);
+    }
+
+    /**
+     * 登录返回双token
+     */
+    @PostMapping("/user-dts")
+    public JsonResponse<Map<String, Object>> loginForDts(@RequestBody User user) throws Exception {
+        Map<String, Object> map = userService.loginForDts(user);
+        return new JsonResponse<>(map);
+    }
+    
     /**
      * 退出登录
-     * @param request
-     * @return
      */
     @DeleteMapping("/refresh-tokens")
     public JsonResponse<String> logout(HttpServletRequest request){
         String refreshToken = request.getHeader("refreshToken");
         Long userId = userSupport.getCurrentUserId();
-//        userService.logout(refreshToken, userId);
+        userService.logout(refreshToken, userId);
         return JsonResponse.success();
     }
 
@@ -97,9 +136,7 @@ public class UserApi {
     @PostMapping("/access-tokens")
     public JsonResponse<String> refreshAccessToken(HttpServletRequest request) throws Exception {
         String refreshToken = request.getHeader("refreshToken");
-//        String accessToken = userService.refreshAccessToken(refreshToken);
-        return new JsonResponse<>(null);
+        String accessToken = userService.refreshAccessToken(refreshToken);
+        return new JsonResponse<>(accessToken);
     }
-    
-
 }

@@ -2,6 +2,9 @@ package com.bilibili.domain.auth;
 
 import java.util.Date;
 
+/**
+ * 对应t_user_role表的实体类
+ */
 public class UserRole {
 
     private Long id;
