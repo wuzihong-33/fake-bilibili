@@ -26,9 +26,6 @@ public class UserMomentApi {
 
     /**
      * 用户发布一条动态（视频、直播、专栏动态）
-     * @param userMoment
-     * @return
-     * @throws Exception
      */
     @ApiLimitedRole(limitedRoleCodeList = {AuthRoleConstant.ROLE_LV0}) // 限制lv0的用户不允许发布动态
 //    @DataLimited
@@ -41,8 +38,7 @@ public class UserMomentApi {
     }
 
     /**
-     * 获取用户关注的up的动态信息
-     * @return
+     * (本人视角) 所有动态
      */
     @GetMapping("/user-subscribed-moments")
     public JsonResponse<List<UserMoment>> getUserSubscribedMoments(){
@@ -50,6 +46,4 @@ public class UserMomentApi {
         List<UserMoment> list = userMomentsService.getUserSubscribedMoments(userId);
         return new JsonResponse<>(list);
     }
-    
-    
 }

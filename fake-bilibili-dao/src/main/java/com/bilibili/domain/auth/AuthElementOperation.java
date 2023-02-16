@@ -2,7 +2,6 @@ package com.bilibili.domain.auth;
 
 import java.util.Date;
 
-
 public class AuthElementOperation {
 
     private Long id;

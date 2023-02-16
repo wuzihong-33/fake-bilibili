@@ -13,9 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/demo")
 @RestController
 public class DemoApi {
-
     @Autowired
     private DemoService demoService;
+
     @Autowired
     private FastDFSUtil fastDFSUtil;
     
@@ -33,7 +33,7 @@ public class DemoApi {
     @PostMapping("/slices")
     public void slices(MultipartFile file) throws Exception {
         System.out.println("fileName: " + file.getName());
-        fastDFSUtil.convertFileToSlices(file);
+        fastDFSUtil.convertFileToSlicesAndStore(file);
     }
     
 //    @GetMapping("/query")

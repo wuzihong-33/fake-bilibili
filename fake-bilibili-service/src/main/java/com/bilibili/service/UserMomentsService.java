@@ -28,24 +28,17 @@ public class UserMomentsService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    /**
-     * 用户发了一条动态，关注了的用户就能看到该动态
-     * @param userMoment
-     * @throws Exception
-     */
+
     public void addUserMoments(UserMoment userMoment) throws Exception {
         userMoment.setCreateTime(new Date());
         userMomentsDao.addUserMoments(userMoment);
         Message msg = new Message(MQConstant.TOPIC_MOMENTS, JSONObject.toJSONString(userMoment).getBytes(StandardCharsets.UTF_8));
         RocketMQUtil.syncSendMsg(momentsProducer, msg);
     }
-
     
     public List<UserMoment> getUserSubscribedMoments(Long userId) {
         String key = "subscribed-" + userId;
         String listStr = redisTemplate.opsForValue().get(key);
         return JSONArray.parseArray(listStr, UserMoment.class);
     }
-    
-    
 }

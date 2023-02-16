@@ -1,6 +1,7 @@
 package com.bilibili.service.util;
 
 import com.bilibili.exception.ConditionException;
+import com.github.tobato.fastdfs.domain.fdfs.FileInfo;
 import com.github.tobato.fastdfs.domain.fdfs.MetaData;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.service.AppendFileStorageClient;
@@ -8,17 +9,17 @@ import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.mysql.cj.util.StringUtils;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class FastDFSUtil {
@@ -32,20 +33,19 @@ public class FastDFSUtil {
     private RedisTemplate<String, String> redisTemplate;
 
     private static final String DEFAULT_GROUP = "group1";
-    private static final int SLICE_SIZE = 1024 * 1024 * 2;// 2M
+    private static final int DEFAULT_SLICE_SIZE = 1024 * 1024 * 2;// 2M
+    private static final String PATH_KEY = "path-key:";
+    private static final String UPLOADED_SIZE_KEY = "uploaded-size-key:";
+    private static final String  UPLOADED_NO_KEY = "uploaded-no-key:";
+
+//    @Value("${fdfs.http.storage-addr}")
+    private String httpFdfsStorageAddr;
+    
 
 
-
-    public String getFileType(MultipartFile file){
-        if(file == null){
-            throw new ConditionException("非法文件！");
-        }
-        String fileName = file.getOriginalFilename();
-        int index = fileName.lastIndexOf(".");
-        return fileName.substring(index+1);
-    }
-
-    //上传
+    /**
+     * 上传文件
+     */
     public String uploadCommonFile(MultipartFile file) throws Exception {
         Set<MetaData> metaDataSet = new HashSet<>();
         String fileType = this.getFileType(file);
@@ -53,22 +53,15 @@ public class FastDFSUtil {
         return storePath.getPath();// 存储路径
     }
 
-    //删除
-    public void deleteFile(String filePath){
-        fastFileStorageClient.deleteFile(filePath);
-    }
-
-    
-    private static final String PATH_KEY = "path-key:";
-    private static final String UPLOADED_SIZE_KEY = "uploaded-size-key:";
-    private static final String  UPLOADED_NO_KEY = "uploaded-no-key:";
-    
-
-    // 通过分片来上传文件
-    // no：上传的分片是第几片
-    
-    
-    
+    /**
+     * 以分片的形式上传文件
+     * @param file
+     * @param fileMd5 md5
+     * @param sliceNo 第几块分片
+     * @param totalSliceNo 总的分片数
+     * @return
+     * @throws Exception
+     */
     public String uploadFileBySlices(MultipartFile file, String fileMd5, Integer sliceNo, Integer totalSliceNo) throws Exception {
         if((file == null || sliceNo == null || totalSliceNo == null) || sliceNo > totalSliceNo) {
             throw new ConditionException("参数异常！");
@@ -76,8 +69,8 @@ public class FastDFSUtil {
         String pathKey = PATH_KEY + fileMd5; // 文件的存储路径
         String uploadedSizeKey = UPLOADED_SIZE_KEY + fileMd5; // 偏移量是通过已上传的文件大小来区分
         String uploadedNoKey = UPLOADED_NO_KEY + fileMd5; // 已经上传了多少个分配，用于结束上传流程
-        String uploadedSizeStr = redisTemplate.opsForValue().get(uploadedSizeKey);
         
+        String uploadedSizeStr = redisTemplate.opsForValue().get(uploadedSizeKey);
         Long uploadedSize = 0L;
         if (!StringUtils.isNullOrEmpty(uploadedSizeStr)) {
             uploadedSize = Long.valueOf(uploadedSizeStr);
@@ -85,7 +78,6 @@ public class FastDFSUtil {
         if (sliceNo == 1) {
             // 第一个分配需要调用upload，后续才能调用modify；开发中一般使用modify，避免重复上传
             String filePath = this.uploadCommonFile(file);
-            // 存储到数据库中
             if(StringUtil.isNullOrEmpty(filePath)){
                 throw new ConditionException("上传失败！");
             }
@@ -102,30 +94,42 @@ public class FastDFSUtil {
         // 修改历史上传分片文件大小
         uploadedSize  += file.getSize();
         redisTemplate.opsForValue().set(uploadedSizeKey, String.valueOf(uploadedSize));
-        //如果所有分片全部上传完毕，则清空redis里面相关的key和value
         String uploadedNoStr = redisTemplate.opsForValue().get(uploadedNoKey);
         Integer uploadedNo = Integer.valueOf(uploadedNoStr);
         String resultPath = "";
         if (uploadedNo.equals(totalSliceNo)) {
+            //如果所有分片全部上传完毕，则清空redis里面相关的key和value
             resultPath = redisTemplate.opsForValue().get(pathKey);
             List<String> keyList = Arrays.asList(uploadedNoKey, pathKey, uploadedSizeKey);
             redisTemplate.delete(keyList); // 批量执行key的删除操作
         }
         return resultPath;
     }
-    
-    // 文件分片实现
-    // 理论上由客户端实现；这里方便测试
-    public void convertFileToSlices(MultipartFile multipartFile) throws Exception{
+
+
+    /**
+     * 删除文件
+     */
+    public void deleteFile(String filePath){
+        fastFileStorageClient.deleteFile(filePath);
+    }
+
+    /**
+     * 将大文件切成小片，实现文件的分配存储
+     * 理论上由客户端实现，这里为了测试和学习
+     * @param multipartFile
+     * @throws Exception
+     */
+    public void convertFileToSlicesAndStore(MultipartFile multipartFile) throws Exception{
         String fileType = this.getFileType(multipartFile);
         //生成临时文件，将MultipartFile转为File
         File file = this.multipartFileToFile(multipartFile);
         long fileLength = file.length();
         int count = 1;
         RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-        for(int i = 0; i < fileLength; i += SLICE_SIZE){
+        for(int i = 0; i < fileLength; i += DEFAULT_SLICE_SIZE){
             randomAccessFile.seek(i);// 随机访问文件中的任意位置
-            byte[] bytes = new byte[SLICE_SIZE];
+            byte[] bytes = new byte[DEFAULT_SLICE_SIZE];
             int len = randomAccessFile.read(bytes);
             String sliceStorePath = "C:\\Users\\123123\\tmpFile\\" + count + "." + fileType; 
             File slice = new File(sliceStorePath);
@@ -159,5 +163,57 @@ public class FastDFSUtil {
         appendFileStorageClient.modifyFile(DEFAULT_GROUP, filePath, file.getInputStream(), file.getSize(), offset);
     }
 
+    
+    public String getFileType(MultipartFile file){
+        if(file == null){
+            throw new ConditionException("非法文件！");
+        }
+        String fileName = file.getOriginalFilename();
+        int index = fileName.lastIndexOf(".");
+        return fileName.substring(index+1);
+    }
 
+    public void viewVideoOnlineBySlices(HttpServletRequest request, HttpServletResponse response, String path) throws Exception {
+        FileInfo fileInfo = fastFileStorageClient.queryFileInfo(DEFAULT_GROUP, path);
+        long totalFileSize = fileInfo.getFileSize();
+        String url = httpFdfsStorageAddr + path; // 文件在文件服务器上的路径
+        Enumeration<String> headerNames = request.getHeaderNames();
+        Map<String, Object> headers = new HashMap<>();
+        // 将Enumeration<String> 转换成 Map<String, Object>
+        while (headerNames.hasMoreElements()) {
+            String header = headerNames.nextElement();
+            headers.put(header, request.getHeader(header));
+        }
+        // 截取分片的起始字节和结束字节位置
+        String rangeStr = request.getHeader("Range");
+        String[] range;
+        if (StringUtil.isNullOrEmpty(rangeStr)) {
+            rangeStr = "bytes=0-" + (totalFileSize-1);
+        }
+        range = rangeStr.split("bytes=|-");
+        long begin = 0;
+        if(range.length >= 2){
+            begin = Long.parseLong(range[1]);
+        }
+        long end = totalFileSize-1;
+        if(range.length >= 3){
+            end = Long.parseLong(range[2]);
+        }
+        long len = (end - begin) + 1;
+        // 格式：Content-Range: bytes 2893548-3091400/9709197
+        String contentRange = "bytes " + begin + "-" + end + "/" + totalFileSize;
+        response.setHeader("Content-Range", contentRange);
+        response.setHeader("Accept-Ranges", "bytes");
+        response.setHeader("Content-Type", "video/mp4");
+        response.setContentLength((int)len);
+        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+        HttpUtil.get(url, headers, response);
+    }
+    
+
+//    public static void main(String[] args) {
+//        String range = "bytes=2893548-3091400";
+//        String[] ran = range.split("bytes=|-");
+//        System.out.println(Arrays.toString(ran)); // [, 2893548, 3091400]
+//    }
 }

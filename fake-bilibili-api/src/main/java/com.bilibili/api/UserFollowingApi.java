@@ -21,8 +21,6 @@ public class UserFollowingApi {
 
     /**
      * 添加用户关注
-     * @param userFollowing
-     * @return
      */
     @PostMapping("/user-followings")
     public JsonResponse<String> addUserFollowings(@RequestBody UserFollowing userFollowing){
@@ -35,7 +33,6 @@ public class UserFollowingApi {
 
     /**
      * 获取用户所有关注信息
-     * @return
      */
     @GetMapping("/user-followings")
     public JsonResponse<List<FollowingGroup>> getUserFollowings(){

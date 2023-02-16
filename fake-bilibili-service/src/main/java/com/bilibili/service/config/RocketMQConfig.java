@@ -60,14 +60,14 @@ public class RocketMQConfig {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context){
                 MessageExt msg = msgs.get(0);
-                if(msg == null){
+                if (msg == null) {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
                 String bodyStr = new String(msg.getBody());
                 UserMoment userMoment = JSONObject.toJavaObject(JSONObject.parseObject(bodyStr), UserMoment.class);
                 Long userId = userMoment.getUserId();
                 List<UserFollowing> fanList = userFollowingService.getUserFans(userId);
-                for(UserFollowing fan : fanList){
+                for (UserFollowing fan : fanList) {
                     String key = "subscribed-" + fan.getUserId();
                     String subscribedListStr = redisTemplate.opsForValue().get(key);
                     List<UserMoment> subscribedList;

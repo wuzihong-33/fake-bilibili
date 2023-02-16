@@ -3,7 +3,6 @@ package com.bilibili.domain;
 import java.util.Date;
 
 public class VideoCollection {
-
     private Long id;
 
     private Long videoId;

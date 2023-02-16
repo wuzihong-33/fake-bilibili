@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
  * MD5加密
  * 单向加密算法
  * 特点：加密速度快，不需要秘钥，但是安全性不高，需要搭配随机盐值使用
- *
  */
 public class MD5Util {
 
@@ -26,18 +25,6 @@ public class MD5Util {
 		return mysign.equals(sign);
 	}
 
-	private static byte[] getContentBytes(String content, String charset) {
-		if (!"".equals(charset)) {
-			try {
-				return content.getBytes(charset);
-			} catch (UnsupportedEncodingException var3) {
-				throw new RuntimeException("MD5签名过程中出现错误,指定的编码集错误");
-			}
-		} else {
-			return content.getBytes();
-		}
-	}
-
 	//获取文件md5加密后的字符串
     public static String getFileMD5(MultipartFile file) throws Exception {
 		InputStream fis = file.getInputStream();
@@ -50,4 +37,16 @@ public class MD5Util {
 		fis.close();
 		return DigestUtils.md5Hex(baos.toByteArray());
     }
+
+	private static byte[] getContentBytes(String content, String charset) {
+		if (!"".equals(charset)) {
+			try {
+				return content.getBytes(charset);
+			} catch (UnsupportedEncodingException var3) {
+				throw new RuntimeException("MD5签名过程中出现错误,指定的编码集错误");
+			}
+		} else {
+			return content.getBytes();
+		}
+	}
 }

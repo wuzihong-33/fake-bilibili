@@ -4,7 +4,6 @@ package com.bilibili.domain;
 import java.util.Date;
 
 public class VideoLike {
-
     private Long id;
 
     private Long userId;
