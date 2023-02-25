@@ -1,1 +1,17 @@
-/target
+# Created by .ignore support plugin (hsz.mobi)
+fake-bilibili-api/src/test/
+fake-bilibili-api/target/classes/com/bilibili/api/aspect/DataLimitedAspect.class
+fake-bilibili-api/target/generated-sources/
+fake-bilibili-dao/src/main/java/com/bilibili/repository/
+fake-bilibili-dao/src/test/
+fake-bilibili-dao/target/classes/com/bilibili/domain/annotation/DataLimited.class
+fake-bilibili-dao/target/classes/mapper/userCoin.xml
+fake-bilibili-dao/target/generated-sources/
+fake-bilibili-service/src/main/resources/
+fake-bilibili-service/target/generated-sources/
+fake-bilibili-service/target/generated-test-sources/
+src/main/java/
+src/test/
+target/generated-sources/
+main/java/
+test/

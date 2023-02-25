@@ -42,9 +42,9 @@ public class UserService {
         String salt = String.valueOf(now.getTime());
         String password = user.getPassword(); // 前端传过来的密码在前端经过rsa加密
         String rawPassword;
-        try{
+        try {
             rawPassword = RSAUtil.decrypt(password);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ConditionException("密码解密失败！");
         }
         String md5Password = MD5Util.sign(rawPassword, salt, "UTF-8");
@@ -143,6 +143,7 @@ public class UserService {
         userDao.updateUsers(user);
     }
 
+    @Transactional
     public Map<String, Object> loginForDts(User user) throws Exception{
         String phone = user.getPhone() == null ? "" : user.getPhone();
         String email = user.getEmail() == null ? "" : user.getEmail();
@@ -177,6 +178,7 @@ public class UserService {
         return result;
     }
 
+    // 根据refreshToken来重新获取accessToken
     public String refreshAccessToken(String refreshToken) throws Exception {
         RefreshTokenDetail refreshTokenDetail = userDao.getRefreshTokenDetail(refreshToken);
         if (refreshTokenDetail == null){
@@ -188,5 +190,9 @@ public class UserService {
 
     public void logout(String refreshToken, Long userId) {
         userDao.deleteRefreshToken(refreshToken, userId);
+    }
+
+    public String getRefreshTokenByUserId(Long userId) {
+        return userDao.getRefreshTokenByUserId(userId);
     }
 }

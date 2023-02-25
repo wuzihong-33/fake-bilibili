@@ -26,7 +26,7 @@ import java.util.List;
 
 @Configuration
 public class RocketMQConfig {
-    @Value("${rocketmq.name.server.address}")
+//    @Value("${rocketmq.name.server.address}")
     private String nameServerAddr; // 名称服务器
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -38,7 +38,7 @@ public class RocketMQConfig {
      * @return
      * @throws Exception
      */
-    @Bean("momentsProducer")
+//    @Bean("momentsProducer")
     public DefaultMQProducer momentsProducer() throws Exception{
         DefaultMQProducer producer = new DefaultMQProducer(MQConstant.GROUP_MOMENTS);
         producer.setNamesrvAddr(nameServerAddr);
@@ -51,7 +51,7 @@ public class RocketMQConfig {
      * @return
      * @throws Exception
      */
-    @Bean("momentsConsumer")
+//    @Bean("momentsConsumer")
     public DefaultMQPushConsumer momentsConsumer() throws Exception{
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(MQConstant.GROUP_MOMENTS);
         consumer.setNamesrvAddr(nameServerAddr);
@@ -91,7 +91,7 @@ public class RocketMQConfig {
      * @return
      * @throws Exception
      */
-    @Bean("danmusProducer")
+//    @Bean("danmusProducer")
     public DefaultMQProducer danmusProducer() throws Exception{
         // 实例化消息生产者Producer
         DefaultMQProducer producer = new DefaultMQProducer(MQConstant.GROUP_DANMUS);
@@ -107,7 +107,7 @@ public class RocketMQConfig {
      * @return
      * @throws Exception
      */
-    @Bean("danmusConsumer")
+//    @Bean("danmusConsumer")
     public DefaultMQPushConsumer danmusConsumer() throws Exception{
         // 实例化消费者
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(MQConstant.GROUP_DANMUS);

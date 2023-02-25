@@ -20,9 +20,21 @@ public class UserSupport {
         HttpServletRequest request = requestAttributes.getRequest();
         String token = request.getHeader("token");
         Long userId = TokenUtil.verifyToken(token);
-        if(userId < 0) {
+        if (userId < 0) {
             throw new ConditionException("非法用户");
         }
+        this.verifyRefreshToken(userId);
         return userId;
     }
+    
+    //验证刷新令牌
+    private void verifyRefreshToken(Long userId) {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String refreshToken = requestAttributes.getRequest().getHeader("refreshToken");
+        String dbRefreshToken = userService.getRefreshTokenByUserId(userId);
+        if (!dbRefreshToken.equals(refreshToken)) {
+            throw new ConditionException("非法用户！");
+        }
+    }
+    
 }

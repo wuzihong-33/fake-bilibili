@@ -3,6 +3,7 @@ package com.bilibili.service;
 
 import com.bilibili.dao.FileDao;
 import com.bilibili.domain.File;
+import com.bilibili.exception.ConditionException;
 import com.bilibili.service.util.FastDFSUtil;
 import com.bilibili.service.util.MD5Util;
 import io.netty.util.internal.StringUtil;
@@ -27,8 +28,11 @@ public class FileService {
                                      String fileMD5,
                                      Integer sliceNo,
                                      Integer totalSliceNo) throws Exception {
+        if(slice == null || sliceNo == null || totalSliceNo == null || sliceNo > totalSliceNo) {
+            throw new ConditionException("参数异常！");
+        }
         File dbFileMD5 = fileDao.getFileByMD5(fileMD5);
-        if(dbFileMD5 != null){
+        if (dbFileMD5 != null) {
             return dbFileMD5.getUrl(); // 秒传
         }
         String url = fastDFSUtil.uploadFileBySlices(slice, fileMD5, sliceNo, totalSliceNo);

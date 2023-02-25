@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * json信息转换配置
+ * 将json的返回，根据json转换配置进行响应的转换
+ */
 @Configuration
 public class JsonHttpMessageConverterConfig {
 
@@ -31,13 +35,10 @@ public class JsonHttpMessageConverterConfig {
         System.out.println(JSONObject.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect));
     }
 
-    /**
-     * 疑惑：做啥用的？
-     * @return
-     */
-//    @Bean
-//    @Primary
-    public HttpMessageConverters fastJsonHttpMessageConverters(){
+
+    @Bean
+    @Primary
+    public HttpMessageConverters fastJsonHttpMessageConverters() {
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -46,11 +47,11 @@ public class JsonHttpMessageConverterConfig {
         // DisableCircularReferenceDetect 关闭循环引用检测
         fastJsonConfig.setSerializerFeatures(
                 SerializerFeature.PrettyFormat,
-                SerializerFeature.WriteNullStringAsEmpty,
+                SerializerFeature.WriteNullStringAsEmpty, // 将null转换为空字符串
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.WriteMapNullValue,
                 SerializerFeature.MapSortField,
-                SerializerFeature.DisableCircularReferenceDetect
+                SerializerFeature.DisableCircularReferenceDetect  // 禁用循环引用检测
         );
         fastConverter.setFastJsonConfig(fastJsonConfig);
         //如果使用feign进行微服务间的接口调用，则需要加上该配置

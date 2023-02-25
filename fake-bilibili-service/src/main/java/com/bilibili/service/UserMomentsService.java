@@ -22,7 +22,7 @@ public class UserMomentsService {
     @Autowired
     private UserMomentsDao userMomentsDao;
     
-    @Autowired
+//    @Autowired
     private DefaultMQProducer momentsProducer;
     
     @Autowired

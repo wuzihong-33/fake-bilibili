@@ -79,6 +79,7 @@ public class HttpUtil {
 	}
 
 	/**
+	 * TODO: 可以引入netty(此处只能同步的形式)
 	 * http get请求 返回输出流
 	 * @param url 请求链接
 	 * @param headers 请求头
@@ -97,12 +98,12 @@ public class HttpUtil {
 			String value = String.valueOf(entry.getValue());
 			con.setRequestProperty(key, value);
 		}
-		con.connect();
+		con.connect(); // 请求资源
 		BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
 		OutputStream os = response.getOutputStream();
 		int responseCode = con.getResponseCode();
 		byte[] buffer = new byte[1024];
-		if(responseCode >=200 && responseCode <300) {
+		if(responseCode >= 200 && responseCode < 300) {
 			int i = bis.read(buffer);
 			while (( i != -1)) {
 				os.write(buffer,0,i);

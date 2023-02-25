@@ -41,8 +41,6 @@ public class FastDFSUtil {
 //    @Value("${fdfs.http.storage-addr}")
     private String httpFdfsStorageAddr;
     
-
-
     /**
      * 上传文件
      */
@@ -63,9 +61,6 @@ public class FastDFSUtil {
      * @throws Exception
      */
     public String uploadFileBySlices(MultipartFile file, String fileMd5, Integer sliceNo, Integer totalSliceNo) throws Exception {
-        if((file == null || sliceNo == null || totalSliceNo == null) || sliceNo > totalSliceNo) {
-            throw new ConditionException("参数异常！");
-        }
         String pathKey = PATH_KEY + fileMd5; // 文件的存储路径
         String uploadedSizeKey = UPLOADED_SIZE_KEY + fileMd5; // 偏移量是通过已上传的文件大小来区分
         String uploadedNoKey = UPLOADED_NO_KEY + fileMd5; // 已经上传了多少个分配，用于结束上传流程
@@ -114,7 +109,10 @@ public class FastDFSUtil {
         fastFileStorageClient.deleteFile(filePath);
     }
 
+    
+    
     /**
+     * 学习使用
      * 将大文件切成小片，实现文件的分配存储
      * 理论上由客户端实现，这里为了测试和学习
      * @param multipartFile
@@ -185,7 +183,7 @@ public class FastDFSUtil {
             headers.put(header, request.getHeader(header));
         }
         // 截取分片的起始字节和结束字节位置
-        String rangeStr = request.getHeader("Range");
+        String rangeStr = request.getHeader("Range"); // 由浏览器自动实现切分
         String[] range;
         if (StringUtil.isNullOrEmpty(rangeStr)) {
             rangeStr = "bytes=0-" + (totalFileSize-1);
@@ -205,8 +203,9 @@ public class FastDFSUtil {
         response.setHeader("Content-Range", contentRange);
         response.setHeader("Accept-Ranges", "bytes");
         response.setHeader("Content-Type", "video/mp4");
-        response.setContentLength((int)len);
+        response.setContentLength((int) len);
         response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+        // 视频内容以流的形式存储在响应包里边
         HttpUtil.get(url, headers, response);
     }
     

@@ -22,7 +22,7 @@ public class VideoApi {
      * 视频投稿
      */
     @PostMapping("/videos")
-    public JsonResponse<String> addVideos(@RequestBody Video video){
+    public JsonResponse<String> addVideos(@RequestBody Video video) {
         Long userId = userSupport.getCurrentUserId();
         video.setUserId(userId);
         videoService.addVideos(video);

@@ -54,28 +54,34 @@ public class WebSocketService {
 
     
     @OnOpen
-    public void openConnection(Session session, @PathParam("token") String token) {
-        try{
-            this.userId = TokenUtil.verifyToken(token);
-        }catch (Exception ignored){} // 没有登录也能发弹幕
-        this.session = session;
-        this.sessionId = session.getId();
-        if (WEBSOCKET_MAP.contains(sessionId)) {
-            WEBSOCKET_MAP.remove(sessionId);
-            WEBSOCKET_MAP.put(sessionId, this);
-        } else {
-            WEBSOCKET_MAP.put(sessionId, this);
-            ONLINE_COUNT.getAndIncrement();
-        }
-        logger.info("用户连接成功, sessionId: {} , 当前在线人数: {}", sessionId, ONLINE_COUNT.get());
-
-        try {
-            this.sendMessage("0"); // 向前端发送连接成功的确认信息
-        } catch (Exception e) {
-            logger.error("连接异常");
-        }
+    public void openConnection(Session session,  @PathParam("token") String token) {
+        logger.info("用户连接成功, sessionId: {} , 当前在线人数: {}", session.getId(), ONLINE_COUNT.get());
     }
     
+    
+//    @OnOpen
+//    public void openConnection(Session session, @PathParam("token") String token) {
+//        try{
+//            this.userId = TokenUtil.verifyToken(token);
+//        }catch (Exception ignored){} // 没有登录也能发弹幕
+//        this.session = session;
+//        this.sessionId = session.getId();
+//        if (WEBSOCKET_MAP.contains(sessionId)) {
+//            WEBSOCKET_MAP.remove(sessionId);
+//            WEBSOCKET_MAP.put(sessionId, this);
+//        } else {
+//            WEBSOCKET_MAP.put(sessionId, this);
+//            ONLINE_COUNT.getAndIncrement();
+//        }
+//        logger.info("用户连接成功, sessionId: {} , 当前在线人数: {}", sessionId, ONLINE_COUNT.get());
+//
+//        try {
+//            this.sendMessage("0"); // 向前端发送连接成功的确认信息
+//        } catch (Exception e) {
+//            logger.error("连接异常");
+//        }
+//    }
+//    
     @OnClose
     public void closeConnection(){
         if(WEBSOCKET_MAP.containsKey(sessionId)){
@@ -115,7 +121,6 @@ public class WebSocketService {
                 //保存弹幕到redis
                 danmuService.addDanmusToRedis(danmu);
             }
-            
         }
         
     }

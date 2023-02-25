@@ -5,7 +5,7 @@ import java.util.Date;
 public class UserMoment {
     private Long id;
     private Long userId;
-    private String type;
+    private String type; // '动态类型：0视频 1直播 2专栏动态'
     private Long contentId;// 关联到另一个表（前端传过来的）
     private Date createTime;
     private Date updateTime;

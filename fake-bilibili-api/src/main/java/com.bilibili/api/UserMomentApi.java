@@ -4,6 +4,7 @@ import com.bilibili.constant.AuthRoleConstant;
 import com.bilibili.domain.JsonResponse;
 import com.bilibili.domain.UserMoment;
 import com.bilibili.domain.annotation.ApiLimitedRole;
+import com.bilibili.domain.annotation.DataLimited;
 import com.bilibili.service.UserMomentsService;
 import com.bilibili.support.UserSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class UserMomentApi {
      * 用户发布一条动态（视频、直播、专栏动态）
      */
     @ApiLimitedRole(limitedRoleCodeList = {AuthRoleConstant.ROLE_LV0}) // 限制lv0的用户不允许发布动态
-//    @DataLimited
+    @DataLimited
     @PostMapping("/user-moments")
     public JsonResponse<String> addUserMoments(@RequestBody UserMoment userMoment) throws Exception {
         Long userId = userSupport.getCurrentUserId();
