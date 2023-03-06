@@ -86,5 +86,4 @@ public class DanmuService {
         list.add(danmu);
         redisTemplate.opsForValue().set(key, JSONObject.toJSONString(list));
     }
-    
 }

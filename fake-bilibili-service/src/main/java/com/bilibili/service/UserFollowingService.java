@@ -44,7 +44,7 @@ public class UserFollowingService {
         if(groupId == null){
             FollowingGroup followingGroup = followingGroupService.getByType(UserConstant.USER_FOLLOWING_GROUP_TYPE_DEFAULT);
             userFollowing.setGroupId(followingGroup.getId());
-        }else{
+        } else {
             FollowingGroup followingGroup = followingGroupService.getById(groupId);
             if(followingGroup == null){
                 throw new ConditionException("关注分组不存在！");
@@ -71,7 +71,7 @@ public class UserFollowingService {
         Set<Long> followingIdSet = userFollowings.stream().map(UserFollowing::getFollowingId).collect(Collectors.toSet());
         List<UserInfo> userInfoList = new ArrayList<>();
         if(followingIdSet.size() > 0){
-            userInfoList = userService.getUserInfoByUserIds(followingIdSet);
+            userInfoList = userService.getUserInfoByUserIds(followingIdSet); // 用户关注的up主信息集合
         }
         for (UserFollowing userFollowing : userFollowings) {
             for (UserInfo userInfo : userInfoList) {

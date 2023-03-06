@@ -14,41 +14,42 @@ import java.util.Set;
 
 @Mapper
 public interface UserDao {
+
     User getUserByPhone(String phone);
 
-    // 返回成功插入的数量
     Integer addUser(User user);
+
+    Integer addUserInfo(UserInfo userInfo);
 
     User getUserById(Long id);
 
     UserInfo getUserInfoByUserId(Long userId);
 
-    Integer addUserInfo(UserInfo userInfo);
+    Integer updateUsers(User user);
+
+    User getUserByPhoneOrEmail(@Param("phone") String phone, @Param("email") String email);
 
     Integer updateUserInfos(UserInfo userInfo);
 
-    List<UserInfo> getUserInfoByUserIds(Set<Long> followingIdSet);
+    List<UserInfo> getUserInfoByUserIds(Set<Long> userIdList);
 
     Integer pageCountUserInfos(Map<String, Object> params);
 
     List<UserInfo> pageListUserInfos(JSONObject params);
 
-    Integer updateUsers(User user);
-
-    Integer deleteRefreshTokenByUserId(Long userId);
-
-    String getRefreshTokenByUserId(Long userId);
-
-    RefreshTokenDetail getRefreshTokenDetail(String refreshToken);
+    Integer deleteRefreshToken(@Param("refreshToken") String refreshToken,
+                               @Param("userId") Long userId);
 
     Integer addRefreshToken(@Param("refreshToken")String refreshToken,
                             @Param("userId") Long userId,
                             @Param("createTime") Date createTime);
-    
-    Integer deleteRefreshToken(@Param("refreshToken") String refreshToken,
-                               @Param("userId") Long userId);
 
+    RefreshTokenDetail getRefreshTokenDetail(String refreshToken);
 
-    User getUserByPhoneOrEmail(@Param("phone") String phone, @Param("email") String email);
+    List<UserInfo> batchGetUserInfoByUserIds(Set<Long> userIdList);
+
+    String getRefreshTokenByUserId(Long userId);
+
+    Integer deleteRefreshTokenByUserId(Long userId);
 
 }

@@ -19,7 +19,7 @@ public class DemoApi {
     @Autowired
     private FastDFSUtil fastDFSUtil;
     
-
+    
     @GetMapping("/test")
     public JsonResponse<String> test() {
         return JsonResponse.success("test api access success");

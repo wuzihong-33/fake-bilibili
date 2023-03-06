@@ -43,7 +43,6 @@ public class UserFollowingApi {
 
     /**
      * 获取用户的所有粉丝信息
-     * @return
      */
     @GetMapping("/user-fans")
     public JsonResponse<List<UserFollowing>> getUserFans(){
@@ -54,8 +53,6 @@ public class UserFollowingApi {
     
     /**
      * 创建自定义用户分组
-     * @param followingGroup
-     * @return
      */
     @PostMapping("/user-following-groups")
     public JsonResponse<Long> addUserFollowingGroups(@RequestBody FollowingGroup followingGroup){
@@ -67,7 +64,6 @@ public class UserFollowingApi {
 
     /**
      * 获取关注用户分组
-     * @return
      */
     @GetMapping("/user-following-groups")
     public JsonResponse<List<FollowingGroup>> getUserFollowingGroups(){

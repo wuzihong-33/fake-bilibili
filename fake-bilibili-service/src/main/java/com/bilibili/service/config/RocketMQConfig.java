@@ -88,8 +88,6 @@ public class RocketMQConfig {
 
     /**
      * 弹幕生产者
-     * @return
-     * @throws Exception
      */
 //    @Bean("danmusProducer")
     public DefaultMQProducer danmusProducer() throws Exception{
@@ -104,14 +102,10 @@ public class RocketMQConfig {
 
     /**
      * 弹幕消费者
-     * @return
-     * @throws Exception
      */
 //    @Bean("danmusConsumer")
     public DefaultMQPushConsumer danmusConsumer() throws Exception{
-        // 实例化消费者
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(MQConstant.GROUP_DANMUS);
-        // 设置NameServer的地址
         consumer.setNamesrvAddr(nameServerAddr);
         // 订阅一个或者多个Topic，以及Tag来过滤需要消费的消息
         consumer.subscribe(MQConstant.TOPIC_DANMUS, "*");

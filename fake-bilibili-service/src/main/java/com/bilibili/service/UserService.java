@@ -195,4 +195,10 @@ public class UserService {
     public String getRefreshTokenByUserId(Long userId) {
         return userDao.getRefreshTokenByUserId(userId);
     }
+
+
+    public List<UserInfo> batchGetUserInfoByUserIds(Set<Long> userIdList) {
+        return userDao.batchGetUserInfoByUserIds(userIdList);
+    }
+
 }

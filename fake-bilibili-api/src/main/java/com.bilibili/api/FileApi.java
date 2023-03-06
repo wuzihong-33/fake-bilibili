@@ -1,7 +1,9 @@
 package com.bilibili.api;
 
 import com.bilibili.domain.JsonResponse;
+import com.bilibili.exception.ConditionException;
 import com.bilibili.service.FileService;
+import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +18,9 @@ public class FileApi {
     
     @PostMapping("/md5files")
     public JsonResponse<String> getFileMD5(MultipartFile file) throws Exception {
+        if (file == null) {
+            throw new ConditionException("bad request");
+        }
         String fileMD5 = fileService.getFileMD5(file);
         return new JsonResponse<>(fileMD5);
     }
@@ -34,6 +39,9 @@ public class FileApi {
                                                    String fileMd5,
                                                    Integer sliceNo,
                                                    Integer totalSliceNo) throws Exception {
+        if (slice == null || StringUtil.isNullOrEmpty(fileMd5) || sliceNo == null || totalSliceNo == null) {
+            throw new ConditionException("bad request");
+        }
         String filePath = fileService.uploadFileBySlices(slice, fileMd5, sliceNo, totalSliceNo);
         return new JsonResponse<>(filePath);
     }

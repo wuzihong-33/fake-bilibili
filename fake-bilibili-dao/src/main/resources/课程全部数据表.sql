@@ -247,7 +247,7 @@ CREATE TABLE `t_video` (
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='视频投稿记录表';
 
 -- ----------------------------
--- Table structure for t_video_binary_picture
+-- Table structure for binary_picture
 -- ----------------------------
 DROP TABLE IF EXISTS `t_video_binary_picture`;
 CREATE TABLE `t_video_binary_picture` (
@@ -265,7 +265,7 @@ CREATE TABLE `t_video_binary_picture` (
 -- ----------------------------
 DROP TABLE IF EXISTS `t_video_coin`;
 CREATE TABLE `t_video_coin` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '视频投稿id',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `userId` bigint DEFAULT NULL COMMENT '用户id',
   `videoId` bigint DEFAULT NULL COMMENT '视频投稿id',
   `amount` int DEFAULT NULL COMMENT '投币数',

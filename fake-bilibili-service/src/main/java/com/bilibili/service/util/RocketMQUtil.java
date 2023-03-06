@@ -15,6 +15,7 @@ public class RocketMQUtil {
     }
 
     public static void asyncSendMsg(DefaultMQProducer producer, Message msg) throws Exception{
+        // DefaultMQProducer是线程安全的
         producer.send(msg, new SendCallback() {
             @Override
             public void onSuccess(SendResult sendResult) {
